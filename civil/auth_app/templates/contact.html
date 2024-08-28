@@ -40,14 +40,29 @@
     <section id="contact" class="py-5">
         <div class="container">
             <h2 class="text-center">Contact Us</h2>
-            <form method="POST" action="{% url 'enquiry' %}">
+            <form method="post" action="{% url 'enquiry' %}">
                 {% csrf_token %}
-                {{ form.as_p }}
-               
+                <div class="mb-3">
+                    <label for="id_name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="id_phone_number" class="form-label">Phone Number</label>
+                    <input type="tel" class="form-control" id="number" name="number" required>
+                </div>
+                <div class="mb-3">
+                    <label for="id_email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="id_feedback" class="form-label">Feedback</label>
+                    <textarea class="form-control" id="feedback" name="feedback" rows="3" required></textarea>
+                </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
     </section>
+
 
     <section id="faq" class="py-5 bg-light">
         <div class="container">

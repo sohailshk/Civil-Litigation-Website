@@ -15,8 +15,8 @@ urlpatterns = [
     path('create_info/', views.create_info, name='create_info'),
     path('info_list/', views.info_list, name='info_list'),
     path('info_detail/<int:pk>/', views.info_detail, name='info_detail'),
-    path('search_info/', views.search_info, name='search_info'),
     path('chatbot/', views.chatbot_response, name='chatbot_response'),
+     path('search/', views.search_view, name='search'),
 
 ]
 

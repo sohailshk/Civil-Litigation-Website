@@ -9,6 +9,8 @@ from .models import info
 import requests
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+from .models import info
 
 
 @guest 
@@ -66,7 +68,8 @@ def enquiry_view(request):
     if request.method == 'POST':
         form = EnquiryForm(request.POST)
         if form.is_valid():
-            form.save()
+            enquiry = form.save()
+            print(enquiry)
             return redirect('contact')  # Replace with your actual success URL
     else:
         form = EnquiryForm()
@@ -89,24 +92,15 @@ def create_info(request):
 # page for  displaying all entered infos Retrieves all Info objects from the database using the Info model's objects.all() method.
 def info_list(request):
     infos = info.objects.all()
-    return render(request, 'info_list.html', {'infos': infos}) 
+    return render(request, 'info.html', {'infos': infos}) 
 
 # primary key is explicitly not defined so we used model jha save hua hai database mai uska ek id hohga 
 # that id is the primary key for us and it is retrieving that primary key
 # Retrieves the Info object with the specified pk from the database using the Info model's objects.get() method.
 #Stores the result in the info variable.
 def info_detail(request, pk):
-    info = info.objects.get(pk=pk)
-    return render(request, 'info_detail.html', {'info': info})
-
-
-def search_info(request):
-    query = request.GET.get('q')
-    if query:
-        results = info.objects.filter(title__icontains=query)
-    else:
-        results=info.objects.none()
-    return render(request, 'search_results.html', {'results': results})
+    info_item = get_object_or_404(info, pk=pk)
+    return render(request, 'info_detail.html', {'info_item': info_item})
 
 
 @csrf_exempt
@@ -138,4 +132,22 @@ def generate_response(intent, traits):
     # Add more intent-based responses
     else:
         return "I'm sorry, I didn't understand that. Could you please rephrase?"
+
+
+
+
+#testing main page search
+def search_view(request):
+    query = request.GET.get('q')
+    results = None
+    if query:
+        results = info.objects.filter(title__icontains=query)  # Searching in the title field
+    all_info = info.objects.all()
+    return render(request, 'search_results.html', {'results': results, 'query': query, 'all_info': all_info})
+
+
+#to show detailed view after clicking on title link
+def detail_view(request, id):
+    info_item = get_object_or_404(info, id=id)
+    return render(request, 'detail_page.html', {'info_item': info_item})
 

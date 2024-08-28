@@ -46,56 +46,38 @@
     <section id="search" class="py-5 bg-light">
         <div class="container">
             <h2 class="text-center">Search Civil Litigation Information</h2>
-            <form id="search-form" class="d-flex justify-content-center">
-                <input id="search-bar" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <form id="search-form" class="d-flex justify-content-center" method="get" action="{% url 'search' %}">
+                <input id="search-bar" class="form-control me-2" type="search" name="q" placeholder="Search"
+                    aria-label="Search">
                 <button class="btn btn-primary" type="submit">Search</button>
             </form>
-        </div>
-    </section>
-
-    <section id="info" class="py-5">
-        <div class="container">
-            <h2 class="text-center">Detailed Information on Civil Litigation</h2><br>
-            <div id="info-content">
-                <div class="info-item">
-                    <h3>Contract Disputes</h3>
-                    <p>A contract dispute arises when one or more parties involved in a contractual agreement disagree
-                        on the terms, obligations, or interpretations of the contract. These disputes can occur in
-                        various scenarios, including business transactions, employment agreements, service contracts,
-                        and more. Contract disputes often result in legal proceedings to resolve the issues at hand.</p>
-                    <h5>Know more information about Contract Disputes <a
-                            href="https://www.pandadoc.com/blog/contract-dispute/" target="_blank">here</a></h5><br>
-                </div>
-                <div class="info-item">
-                    <h3>Personal Injury</h3>
-                    <p>Personal injury cases involve claims for damages due to injuries sustained by an individual as a
-                        result of someone else's negligence or intentional harm. Common examples include car accidents,
-                        slip and falls, and medical malpractice.</p>
-                    <h5>Know more information about Personal Injury <a
-                            href="https://bk-lawgroup.com/blog/what-is-personal-injury-law/#:~:text=Personal%20injury%20law%2C%20or%20sometimes,where%20the%20government%20prosecutes%20someone."
-                            target="_blank">here</a></h5><br>
-                </div>
-                <div class="info-item">
-                    <h3>Property Disputes</h3>
-                    <p>Property disputes can involve conflicts over property boundaries, ownership, or lease agreements.
-                        These disputes often require legal intervention to resolve issues related to property rights and
-                        usage.</p>
-                    <h5>Know more information about Property Disputes <a
-                            href="https://sllegalservices.com/property-disputes-in-india-everything-you-need-to-know/"
-                            target="_blank">here</a></h5><br>
-                </div>
-                <div class="info-item">
-                    <h3>Employment Disputes</h3>
-                    <p>Employment disputes arise between employers and employees regarding issues such as wrongful
-                        termination, wage disputes, harassment, and discrimination. Legal resolution may be necessary to
-                        address these conflicts.</p>
-                    <h5>Know more information about Employment Disputes <a
-                            href="https://www.superlawyers.com/resources/employment-litigation/"
-                            target="_blank">here</a></h5><br>
-                </div>
+    
+            {% if query %}
+            <h3 class="text-center mt-5">Search Results for "{{ query }}"</h3>
+            <div class="list-group mt-3">
+                {% for result in results %}
+                <a href="{% url 'detail' result.id %}" class="list-group-item list-group-item-action">
+                    <h5 class="mb-1">{{ result.title }}</h5>
+                    <p class="mb-1">{{ result.description|truncatewords:20 }}</p>
+                </a>
+                {% empty %}
+                <p class="text-center">No results found for "{{ query }}"</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+    
+            <h3 class="text-center mt-5">All Information</h3>
+            <div class="list-group mt-3">
+                {% for item in all_info %}
+                <a href="{% url 'detail' item.id %}" class="list-group-item list-group-item-action">
+                    <h5 class="mb-1">{{ item.title }}</h5>
+                    <p class="mb-1">{{ item.description|truncatewords:20 }}</p>
+                </a>
+                {% endfor %}
             </div>
         </div>
     </section>
+
 
     <footer class="bg-dark text-white py-4">
         <div class="container">
@@ -142,20 +124,5 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('search-form').addEventListener('submit', function (e) {
-            e.preventDefault();
-            let searchQuery = document.getElementById('search-bar').value.toLowerCase();
-            let infoItems = document.querySelectorAll('.info-item');
-            infoItems.forEach(item => {
-                let text = item.textContent.toLowerCase();
-                if (text.includes(searchQuery)) {
-                    item.style.display = 'block';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-    </script>
 </body>
 </html>
