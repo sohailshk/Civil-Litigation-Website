@@ -1,0 +1,15 @@
+<h1>Info List</h1>
+<ul>
+    {% for info in infos %}
+    <li>
+        <a href="{% url 'info_detail' info.pk %}">{{ info.title }}</a>
+        {% if info.image %}
+        <img src="{{ info.image.url }}" alt="{{ info.title }}" style="width: 100px; height: auto;">
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+<form method="get" action="{% url 'search_info' %}">
+    <input type="text" name="q" placeholder="Search...">
+    <button type="submit">Search</button>
+</form>

@@ -40,23 +40,10 @@
     <section id="contact" class="py-5">
         <div class="container">
             <h2 class="text-center">Contact Us</h2>
-            <form>
-                <div class="mb-3">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" required>
-                </div>
-                <div class="mb-3">
-                    <label for="number" class="form-label">Phone Number</label>
-                    <input type="tel" class="form-control" id="number" required>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="email" required>
-                </div>
-                <div class="mb-3">
-                    <label for="feedback" class="form-label">Feedback</label>
-                    <textarea class="form-control" id="feedback" rows="3" required></textarea>
-                </div>
+            <form method="POST" action="{% url 'enquiry' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+               
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>

@@ -1,0 +1,5 @@
+<h1>{{ info.title }}</h1>
+{% if info.image %}
+<img src="{{ info.image.url }}" alt="{{ info.title }}" style="width: 300px; height: auto;">
+{% endif %}
+<p>{{ info.description }}</p>

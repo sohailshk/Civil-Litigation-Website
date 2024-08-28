@@ -32,6 +32,10 @@
                     <a href="{% url 'info' %}" class="nav-item nav-link">Information</a>
                     <a href="{% url 'contact' %}" class="nav-item nav-link ">Contact Us</a>
                     <a href="{% url 'profile' %}" class="nav-item nav-link">My Profile</a>
+                <form action="" method="get" class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
                 </div>
             </div>
         </div>
@@ -96,6 +100,20 @@
         </div>
     </section>
 
+    <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; width: 300px; z-index: 1000;">
+        <div id="chatbot-header" style="background-color: #343a40; color: white; padding: 10px; cursor: pointer;">
+            Chat with Us
+        </div>
+        <div id="chatbot-body"
+            style="display: none; border: 1px solid #343a40; background-color: white; height: 400px; overflow-y: auto;">
+            <div id="chatbot-messages" style="padding: 10px;"></div>
+            <input type="text" id="chatbot-input"
+                style="width: 100%; padding: 10px; border: none; border-top: 1px solid #ddd;"
+                placeholder="Type your message...">
+        </div>
+    </div>
+
+
     <footer class="bg-dark text-white py-4">
         <div class="container">
             <div class="row">
@@ -141,5 +159,48 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<script>
+    document.getElementById("chatbot-header").onclick = function () {
+        var chatbotBody = document.getElementById("chatbot-body");
+        if (chatbotBody.style.display === "none") {
+            chatbotBody.style.display = "block";
+        } else {
+            chatbotBody.style.display = "none";
+        }
+    };
+
+    document.getElementById("chatbot-input").onkeypress = function (event) {
+        if (event.key === "Enter") {
+            var userInput = this.value;
+            this.value = "";
+            var messagesContainer = document.getElementById("chatbot-messages");
+
+            var userMessage = document.createElement("div");
+            userMessage.style.margin = "10px 0";
+            userMessage.style.textAlign = "right";
+            userMessage.innerHTML = "<strong>You:</strong> " + userInput;
+            messagesContainer.appendChild(userMessage);
+
+            fetch("{% url 'chatbot_response' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: "message=" + encodeURIComponent(userInput)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    var botMessage = document.createElement("div");
+                    botMessage.style.margin = "10px 0";
+                    botMessage.style.textAlign = "left";
+                    botMessage.innerHTML = "<strong>Bot:</strong> " + data.response;
+                    messagesContainer.appendChild(botMessage);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                });
+        }
+    };
+</script>
+
 
 </html>
